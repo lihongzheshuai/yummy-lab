@@ -1,16 +1,15 @@
-package com.coderli.jdk.concurrentcy.volatileexample;
+package com.coderli.jdk.concurrentcy.lock;
 
 /**
- * Volatile语义样例
- *
  * @author li.hzh
- * @date 2016-03-30 21:12
+ * @date 2016-04-01 12:17
  */
-public class VolatileExample {
+public class LockSemanticsExample {
 
     static int a, b = 0;
-    static boolean flag = false;
     static int count = 0;
+    static boolean flag = false;
+    static Object lock = new Object();
 
 
     public static void main(String[] args) throws InterruptedException {
@@ -22,13 +21,17 @@ public class VolatileExample {
                 public void run() {
                     shortWait(100000);
                     a = 1; //1
-                    flag = true; //2
+//                    synchronized (lock) {
+                    flag = true;
+//                    }
                 }
             });
 
             Thread two = new Thread(new Runnable() {
                 public void run() {
-                    if (flag) { //3
+                    synchronized (lock) {
+                    }
+                    if (flag) {
                         b = a; //4
                         System.out.println("第" + count + "次: b=" + b);
                         if (b == 0) {
@@ -51,4 +54,5 @@ public class VolatileExample {
             end = System.nanoTime();
         } while (start + interval >= end);
     }
+
 }

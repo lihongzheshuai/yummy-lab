@@ -5,7 +5,7 @@ import sun.misc.Unsafe;
 import java.lang.reflect.Field;
 
 /**
- * 未完成
+ * 利用CAS和volatile实现的锁的功能
  *
  * @author li.hzh
  * @date 2016-03-31 21:55
