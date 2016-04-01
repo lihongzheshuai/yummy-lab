@@ -13,7 +13,7 @@ import java.lang.reflect.Field;
 public class ThreadSafeCountWithVolatileExample {
 
     static int a = 0;
-    private int state;
+    private volatile int state;
     private static final Unsafe unsafe = getUnsafe();
     private static long stateOffset;
 
@@ -37,16 +37,20 @@ public class ThreadSafeCountWithVolatileExample {
         return null;
     }
 
+    public boolean casState(int expect, int val) {
+        return unsafe.compareAndSwapInt(this, stateOffset, expect, val);
+    }
+
     public void runExample() throws InterruptedException {
         int threadCount = 100;
-        final int countTimesPerThread = 10000;
+        final int countTimesPerThread = 10000000;
         Thread[] ts = new Thread[threadCount];
         for (int i = 0; i < threadCount; i++) {
             ts[i] = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     for (; ; ) {
-                        boolean lockState = unsafe.compareAndSwapInt(state, stateOffset, 0, 1);
+                        boolean lockState = casState(0, 1);
                         if (lockState) {
                             break;
                         }
@@ -55,8 +59,9 @@ public class ThreadSafeCountWithVolatileExample {
                     for (int j = 0; j < countTimesPerThread; j++) {
                         a++;
                     }
-                    //业务代码结束, 通过CAS改回值(此处将state改为volatileb变量亦可.)
-                    unsafe.compareAndSwapInt(state, stateOffset, 1, 0);
+                    //业务代码结束, 通过CAS改回值(此处将state改为volatile变量亦可.)
+//                    casState(1, 0);
+                    state = 0;
                 }
             });
         }
