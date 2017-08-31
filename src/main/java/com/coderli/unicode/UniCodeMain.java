@@ -41,6 +41,7 @@ public class UniCodeMain {
         print(unicodeBytes);
         char[] chars = text.toCharArray();
         for (char c : chars) {
+            System.out.println((int) c);
             System.out.print(Integer.toBinaryString(c) + " ");
         }
         System.out.println();
