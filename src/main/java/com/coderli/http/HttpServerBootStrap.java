@@ -17,8 +17,8 @@ public class HttpServerBootStrap {
         HttpServer httpServer = new SimpleHttpServer();
         try {
             int port = 7080;
+            log.info("Http Server starting at port {}.", port);
             httpServer.bind(port);
-            log.info("Http Server started at port {}.", port);
         } catch (IOException e) {
             log.error("", e);
             e.printStackTrace();
