@@ -15,6 +15,7 @@ public class MaxSubArraySum {
             maxCurrent += nums[i];
             maxCurrent = Math.max(maxCurrent, nums[i]);
             maxSum = Math.max(maxSum, maxCurrent);
+
         }
         System.out.println(maxSum);
     }
